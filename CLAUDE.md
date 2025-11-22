@@ -6,20 +6,51 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 The requirements-expert plugin is a **Claude Code plugin** that guides users through the full requirements lifecycle: **Vision → Epics → User Stories → Tasks**. All requirements are stored as GitHub issues in GitHub Projects with full parent/child hierarchy—no local files.
 
+**No external dependencies**: This is a pure Claude Code plugin with no npm packages, Python/Ruby runtimes, or databases. The only external dependency is GitHub CLI (`gh`).
+
+## Quick Reference
+
+**Plugin Root**: `plugins/requirements-expert/` (not repository root)
+
+**Test Locally**:
+```bash
+cc --plugin-dir plugins/requirements-expert
+/requirements:init  # Test a command
+```
+
+**8 Commands**: init, discover-vision, identify-epics, create-stories, create-tasks, prioritize, review, status
+
+**6 Skills**: vision-discovery, epic-identification, user-story-creation, task-breakdown, prioritization, requirements-feedback
+
+**2 Agents**: requirements-assistant (orchestration), requirements-validator (quality checks)
+
+**GitHub CLI is critical**: All operations use `gh` commands via Bash tool. Verify with `gh auth status`.
+
 ## Architecture
 
-### Component Structure
+### Repository Structure
 
-This is a **pure Claude Code plugin** following the standard plugin architecture:
+This repository uses a **marketplace-at-root** structure where the repository acts as both a development workspace and a marketplace for distribution:
 
 ```
-.claude-plugin/plugin.json  # Plugin manifest (required)
-commands/                   # 8 slash commands (user-initiated actions)
-skills/                     # 6 knowledge modules (auto-loaded methodology)
-agents/                     # 2 specialized agents (autonomous assistance)
-hooks/hooks.json           # UserPromptSubmit hook (proactive detection)
-.mcp.json                  # GitHub CLI MCP server configuration
+/                                    # Repository root (marketplace)
+├── .claude-plugin/
+│   └── marketplace.json             # Marketplace manifest (v0.1.0)
+├── plugins/
+│   └── requirements-expert/         # PLUGIN ROOT (publishable unit)
+│       ├── .claude-plugin/
+│       │   └── plugin.json          # Plugin manifest (v0.1.0)
+│       ├── commands/                # 8 slash commands (*.md)
+│       ├── skills/                  # 6 knowledge modules (*/SKILL.md)
+│       ├── agents/                  # 2 specialized agents (*.md)
+│       ├── hooks/
+│       │   └── hooks.json           # UserPromptSubmit hook
+│       └── .mcp.json                # GitHub CLI MCP server config
+├── README.md                        # User-facing documentation
+└── CLAUDE.md                        # This file (development docs)
 ```
+
+**Critical**: The plugin root is `plugins/requirements-expert/`, not the repository root. All component paths must include this prefix.
 
 ### Three-Layer Architecture
 
@@ -42,24 +73,34 @@ hooks/hooks.json           # UserPromptSubmit hook (proactive detection)
 
 ### Data Architecture: 100% GitHub Projects
 
-**Critical Design Decision**: No local files for requirements. Everything is GitHub issues.
+**Critical Design Decision**: No local files for requirements. Everything is GitHub issues in GitHub Projects.
 
-**Hierarchy Structure**:
+**Hierarchy Structure** (parent/child relationships):
 ```
-Vision Issue (Type: Vision)
-  └── Epic Issue (Type: Epic, parent: Vision)
-      └── Story Issue (Type: Story, parent: Epic)
-          └── Task Issue (Type: Task, parent: Story)
+Vision Issue (#1, Type: Vision, labels: type:vision)
+  └── Epic Issue (#2, Type: Epic, parent: #1, labels: type:epic, priority:must-have)
+      └── Story Issue (#3, Type: Story, parent: #2, labels: type:story, priority:must-have)
+          └── Task Issue (#4, Type: Task, parent: #3, labels: type:task)
 ```
 
-**Custom Fields** (set via `gh project field-create`):
-- `Type`: Vision | Epic | Story | Task
-- `Priority`: Must Have | Should Have | Could Have | Won't Have
-- `Status`: Not Started | In Progress | Completed
+**Two-Layer Metadata System**:
 
-**Labels** (applied to issues):
-- `type:vision`, `type:epic`, `type:story`, `type:task`
-- `priority:must-have`, `priority:should-have`, `priority:could-have`, `priority:wont-have`
+1. **Custom Fields** (Project-level, set via `gh project item-edit`):
+   - `Type`: Vision | Epic | Story | Task
+   - `Priority`: Must Have | Should Have | Could Have | Won't Have
+   - `Status`: Not Started | In Progress | Completed
+
+2. **Labels** (Issue-level, set via `gh issue create --label`):
+   - Type: `type:vision`, `type:epic`, `type:story`, `type:task`
+   - Priority: `priority:must-have`, `priority:should-have`, `priority:could-have`, `priority:wont-have`
+
+**Why both?**: Custom fields enable Project views/filtering. Labels enable cross-project queries and GitHub API filtering.
+
+**Data Flow**:
+1. Create GitHub issue in GitHub Projects → Returns issue URL and number
+2. Add issue to project → Returns project item ID
+3. Set custom field on project item → Type, Priority, Status visible in project
+4. Parent/child links created via GitHub's native issue hierarchy
 
 ## Key Design Patterns
 
@@ -128,7 +169,7 @@ Only four priority levels (no custom priorities):
 
 ### Adding a New Command
 
-1. Create `commands/new-command.md`
+1. Create `plugins/requirements-expert/commands/new-command.md`
 2. Add YAML frontmatter:
    ```yaml
    ---
@@ -140,12 +181,14 @@ Only four priority levels (no custom priorities):
 3. Write instructions **FOR Claude** (not TO the user)
 4. Use imperative form: "Do X", not "You should do X"
 5. Include error handling for common failure modes
-6. Test with: `cc --plugin-dir .` then `/requirements:new-command`
+6. Follow markdown style guide (ATX headers, dash lists, fenced code blocks)
+7. Test with: `cc --plugin-dir plugins/requirements-expert` then `/requirements:new-command`
+8. Lint before committing: `markdownlint plugins/requirements-expert/commands/new-command.md`
 
 ### Adding a New Skill
 
-1. Create directory: `skills/new-skill/`
-2. Create `skills/new-skill/SKILL.md` with frontmatter:
+1. Create directory: `plugins/requirements-expert/skills/new-skill/`
+2. Create `plugins/requirements-expert/skills/new-skill/SKILL.md` with frontmatter:
    ```yaml
    ---
    name: New Skill Name
@@ -157,11 +200,13 @@ Only four priority levels (no custom priorities):
 4. Keep SKILL.md body lean (<2,000 words)
 5. Move detailed content to `references/` subdirectory
 6. Add templates to `references/` (e.g., `references/template.md`)
-7. Use skill-reviewer agent to validate quality
+7. Follow markdown style guide (ATX headers, dash lists, fenced code blocks)
+8. Use skill-reviewer agent to validate quality
+9. Lint before committing: `markdownlint plugins/requirements-expert/skills/new-skill/**/*.md`
 
 ### Modifying Agents
 
-Agents are defined in `agents/*.md` with frontmatter:
+Agents are defined in `plugins/requirements-expert/agents/*.md` with frontmatter:
 ```yaml
 ---
 name: agent-name
@@ -185,100 +230,130 @@ tools:
 
 **Include 3-4 `<example>` blocks** to train triggering behavior.
 
-## Testing Commands
+## Development Commands
 
-### Local Testing
+### Linting Markdown Files
+
+This repository uses markdownlint to enforce consistent markdown formatting:
+
 ```bash
-# Load plugin locally
-cc --plugin-dir /Users/stevenims/Projects/requirements-expert
+# Install markdownlint-cli if not already installed
+npm install -g markdownlint-cli
+
+# Lint all markdown files
+markdownlint '**/*.md' --ignore node_modules
+
+# Lint specific directories
+markdownlint plugins/requirements-expert/commands/*.md
+markdownlint plugins/requirements-expert/skills/**/*.md
+markdownlint README.md CLAUDE.md
+
+# Fix auto-fixable issues
+markdownlint '**/*.md' --ignore node_modules --fix
+```
+
+**Markdown style rules** (see `.markdownlint.json`):
+- ATX-style headers (`#` not underlines)
+- Dash-style lists (`-` not `*` or `+`)
+- 2-space list indentation
+- No line length limits (MD013 disabled)
+- Fenced code blocks (not indented)
+- Allow HTML elements: `<example>`, `<commentary>`, `<details>`, `<summary>`, `<br>`
+
+**VS Code integration**: Markdown validation is enabled (see `.vscode/settings.json`)
+
+### Testing Locally
+
+```bash
+# Load plugin locally (from repository root)
+cd /Users/stevenims/Projects/requirements-expert
+cc --plugin-dir plugins/requirements-expert
 
 # Test specific command
 /requirements:init
 
-# Debug: Check if GitHub CLI is authenticated
-gh auth status
+# Verify GitHub CLI setup
+gh auth status                    # Check authentication
+gh project list --owner [owner]   # List existing projects
+```
 
-# Debug: Verify project exists
-gh project list --owner [owner]
+### Validating Components
+
+```bash
+# After modifying a skill
+/plugin-dev:skill-reviewer        # Review skill quality
+
+# After creating/modifying plugin structure
+/plugin-dev:plugin-validator      # Validate plugin structure
+
+# Check command syntax
+# Commands use YAML frontmatter + markdown instructions
 ```
 
 ### Testing Workflow
-1. Start in a git repository with GitHub remote
-2. Ensure `gh` CLI is authenticated (`gh auth login`)
-3. Run `/requirements:init` first (creates project)
-4. Test command sequence: init → vision → epics → stories → tasks
-5. Validate with `/requirements:review`
-6. Check status with `/requirements:status`
 
-### Common Test Scenarios
+**Prerequisites**:
+- Git repository with GitHub remote
+- GitHub CLI (`gh`) authenticated: `gh auth login`
+- GitHub Projects enabled on repository
 
-**New Project from Scratch**:
-```
-User: "I want to build a task management app"
-→ Hook detects requirements work
-→ requirements-assistant suggests /requirements:init
-→ Follow full workflow
-```
+**Full Lifecycle Test**:
+1. `/requirements:init` - Create project with custom fields
+2. `/requirements:discover-vision` - Create vision issue
+3. `/requirements:identify-epics` - Create epic issues
+4. `/requirements:create-stories` - Create story issues (select epic)
+5. `/requirements:create-tasks` - Create task issues (select story)
+6. `/requirements:prioritize` - Apply MoSCoW priorities
+7. `/requirements:review` - Validate structure and quality
+8. `/requirements:status` - View project summary
 
-**Resume Existing Work**:
-```
-User: "I have a vision and 3 epics, need to create stories"
-→ Agent checks GitHub Project state
-→ Suggests /requirements:create-stories
-→ Selects epic to break down
-```
-
-**Validation Check**:
-```
-User: "Are my requirements ready for development?"
-→ Run /requirements:review
-→ requirements-validator generates report
-→ Fix any critical issues found
-```
+**Test Scenarios**:
+- **New project**: Start with `/requirements:init`, follow full workflow
+- **Resume work**: Agent checks GitHub state, suggests next appropriate command
+- **Add to existing**: Commands detect existing items and offer to add more
+- **Validation**: Run `/requirements:review` to check for issues
 
 ## GitHub CLI Integration
 
-All commands use `gh` CLI for GitHub operations:
+All commands use `gh` CLI for GitHub operations via the Bash tool. The `.mcp.json` configures a GitHub MCP server but commands primarily use direct CLI calls.
 
-### Project Operations
+### Critical Commands
+
+**Project Operations**:
 ```bash
-# Create project
-gh project create --owner [owner] --title "[name]"
-
-# List projects
-gh project list --owner [owner] --format json
-
-# Add item to project
-gh project item-add [project-id] --owner [owner] --url [issue-url]
-
-# Set custom fields
-gh project item-edit --id [item-id] --field-id [field-id] --value "[value]"
+gh project create --owner [owner] --title "[name]"         # Create project
+gh project list --owner [owner] --format json              # List projects
+gh project item-list [project-id] --format json            # List items
+gh project item-add [project-id] --owner [owner] --url [issue-url]  # Add issue
+gh project item-edit --id [item-id] --field-id [field-id] --value "[value]"  # Set field
+gh project field-create [project-id] --owner [owner] --data-type SINGLE_SELECT --name "Type"  # Create field
 ```
 
-### Issue Operations
+**Issue Operations**:
 ```bash
-# Create issue
-gh issue create --repo [repo] --title "[title]" --body "[body]" --label "type:epic"
-
-# Read issue
-gh issue view [number] --repo [repo] --json body,title
-
-# List issues
-gh issue list --repo [repo] --label "type:epic" --format json
+gh issue create --repo [repo] --title "[title]" --body "[body]" --label "type:epic"  # Create
+gh issue view [number] --repo [repo] --json body,title    # Read
+gh issue list --repo [repo] --label "type:epic" --format json  # List by label
 ```
 
-### Error Handling
+**Repository Detection**:
+```bash
+gh repo view --json nameWithOwner  # Get current repo info
+```
 
-**Always check**:
-- `gh` CLI availability: `which gh`
-- Authentication: `gh auth status`
-- Permissions: Look for "repo" and "project" scopes
-- Repository context: `gh repo view --json nameWithOwner`
+### Error Handling Checklist
 
-**Common errors**:
-- "GitHub CLI not found" → `brew install gh`
-- "Not authenticated" → `gh auth login`
-- "Insufficient permissions" → `gh auth refresh -s project`
+Before any GitHub operation:
+1. Check `gh` CLI exists: `which gh`
+2. Verify authentication: `gh auth status`
+3. Confirm repository context: `gh repo view --json nameWithOwner`
+4. Check required permissions: "repo" and "project" scopes
+
+**Common Error Responses**:
+- CLI not found → "Install GitHub CLI: `brew install gh`"
+- Not authenticated → "Run: `gh auth login`"
+- Insufficient permissions → "Run: `gh auth refresh -s project`"
+- Not in git repo → "Navigate to a git repository with GitHub remote"
 
 ## Hook Behavior
 
@@ -306,6 +381,7 @@ requirements-expert plugin to help structure this work?
 ## Methodology Summary
 
 ### Vision Elements
+
 - Problem statement (what problem, why it matters)
 - Target users (who, characteristics)
 - Solution overview (what it does)
@@ -313,23 +389,62 @@ requirements-expert plugin to help structure this work?
 - Scope boundaries (included/excluded)
 
 ### Epics (5-12 typical)
+
 - Major capabilities or feature themes
 - Too large for single iteration
 - Linked to vision as parent
 - Examples: "User Authentication", "Data Management", "Reporting Dashboard"
 
 ### User Stories (5-15 per epic)
-- Format: "As a [user], I want [goal], so that [benefit]"
+
+- Format: "As a {user}, I want {goal}, so that {benefit}"
 - INVEST criteria compliance required
 - 3-5 acceptance criteria minimum
 - Linked to epic as parent
 
 ### Tasks (5-20 per story)
+
 - Implementation-specific work items
 - 2-8 hours of work (right-sized)
 - 3-5 acceptance criteria minimum
 - Organized by layer: frontend, backend, data, testing, docs
 - Linked to story as parent
+
+## Component File Structure
+
+### Commands (`plugins/requirements-expert/commands/*.md`)
+
+Each command is a markdown file with YAML frontmatter:
+```yaml
+---
+name: command-name
+description: Brief description
+allowed-tools: [Bash, AskUserQuestion, Read]
+---
+```
+
+Body contains **instructions FOR Claude** (imperative form), not instructions TO the user.
+
+**Available commands**: init, discover-vision, identify-epics, create-stories, create-tasks, prioritize, review, status
+
+### Skills (`plugins/requirements-expert/skills/*/SKILL.md`)
+
+Progressive disclosure pattern:
+- `SKILL.md`: Core methodology (1,500-2,000 words) with YAML frontmatter
+- `references/*.md`: Detailed documentation, templates, worksheets
+- Trigger description uses third-person with specific phrases
+
+**Available skills**: vision-discovery, epic-identification, user-story-creation, task-breakdown, prioritization, requirements-feedback
+
+### Agents (`plugins/requirements-expert/agents/*.md`)
+
+System prompts with YAML frontmatter and `<example>` blocks for triggering:
+- `requirements-assistant`: Workflow orchestration, proactive guidance
+- `requirements-validator`: Quality validation, INVEST compliance
+
+### Hooks (`plugins/requirements-expert/hooks/hooks.json`)
+
+Single `UserPromptSubmit` hook that detects requirements-related queries and suggests the plugin.
 
 ## File Organization Best Practices
 
@@ -347,13 +462,41 @@ When modifying this plugin:
 
 ## Common Pitfalls to Avoid
 
-1. **Don't create local requirement files** - Everything goes in GitHub issues
+1. **Don't create local requirement files** - Everything goes in GitHub issues in GitHub Projects
 2. **Don't skip state validation** - Always check what exists before suggesting next action
 3. **Don't use second person in skills** - Use imperative form ("Do X" not "You should do X")
 4. **Don't hardcode paths** - Use `${CLAUDE_PLUGIN_ROOT}` if needed (though not used in this plugin)
 5. **Don't duplicate content** - Between SKILL.md and references/, between README and CLAUDE.md
 6. **Don't make up GitHub issue numbers** - Always query actual state
 7. **Don't suggest commands without prerequisites** - Check vision exists before suggesting epics
+
+## Publishing & Version Management
+
+### Version Release Checklist
+
+When releasing a new version (e.g., v0.2.0):
+
+1. **Update version in both manifests** (must match):
+   - `plugins/requirements-expert/.claude-plugin/plugin.json`
+   - `.claude-plugin/marketplace.json` (in plugins array)
+
+2. **Update documentation**:
+   - README.md changelog section
+   - Any breaking changes or new features
+
+3. **Tag the release**:
+   ```bash
+   git tag v0.2.0
+   git push origin v0.2.0
+   ```
+
+4. **Test the plugin**:
+   ```bash
+   cc --plugin-dir plugins/requirements-expert
+   # Run through full lifecycle test
+   ```
+
+**Publishing**: The entire repository acts as a marketplace. The `plugins/requirements-expert/` directory is the distributable plugin unit.
 
 ## Plugin Development Workflow
 
@@ -362,7 +505,7 @@ When developing new features for this plugin:
 1. **Design First**: Determine which layer (command/skill/agent)
 2. **Check Patterns**: Follow existing patterns in similar components
 3. **Progressive Build**: Start with minimal version, expand incrementally
-4. **Test Locally**: Use `cc --plugin-dir .` for each change
+4. **Test Locally**: Use `cc --plugin-dir plugins/requirements-expert` for each change
 5. **Validate**: Use plugin-validator agent if available
 6. **Document**: Update README if user-facing, update this file if architectural
 

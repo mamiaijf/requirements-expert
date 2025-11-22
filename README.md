@@ -6,7 +6,7 @@ A comprehensive requirements management plugin that guides users through the ful
 
 The Requirements Expert plugin helps you transform vague ideas into fully-structured, actionable requirements using a proven methodology:
 
-**Vision → Epics → User Stories → Tasks**
+> Vision → Epics → User Stories → Tasks
 
 Everything is managed in GitHub Projects with full parent/child hierarchy, making your entire product roadmap visible and trackable in one place.
 
@@ -14,32 +14,39 @@ Everything is managed in GitHub Projects with full parent/child hierarchy, makin
 
 - **Interactive Discovery**: Guided Q&A sessions for each phase using best practices
 - **Full Lifecycle Support**: Vision → Epics → Stories → Tasks with feedback loops
-- **GitHub Projects Integration**: All requirements stored as GitHub issues with true hierarchy
+- **GitHub Projects Integration**: All requirements stored as GitHub issues in GitHub Projects with true hierarchy
 - **MoSCoW Prioritization**: Built-in prioritization framework at every level
 - **Automated Validation**: Quality checks for completeness, consistency, and best practices
 - **Workflow Orchestration**: Seamlessly move from one phase to the next with guided automation
 
 ## Prerequisites
 
-- GitHub CLI (`gh`) installed and authenticated
-- Access to a GitHub repository with Projects enabled
-- GitHub permissions: `repo`, `project` (read/write)
+- **Claude Code**: Install from [claude.ai/code](https://claude.ai/code)
+- **GitHub CLI** (`gh`): Installed and authenticated (`gh auth login`)
+- **Git repository**: A GitHub repository where you want to track requirements
+- **GitHub permissions**: `repo` and `project` scopes (read/write)
+
+Verify setup:
+```bash
+gh auth status  # Should show ✓ Logged in and list scopes
+```
 
 ## Installation
 
 ### Local Development
 
 ```bash
-# Clone or create the plugin directory
-cd /path/to/requirements-expert
+# Clone the repository
+git clone https://github.com/sjnims/requirements-expert.git
+cd requirements-expert
 
-# Test with Claude Code
-cc --plugin-dir /path/to/requirements-expert
+# Load the plugin (note: plugin root is in plugins/ subdirectory)
+cc --plugin-dir plugins/requirements-expert
 ```
 
 ### From Marketplace
 
-*(Publishing instructions will be added after initial development)*
+**Note:** This plugin is currently distributed via GitHub. Marketplace publishing is planned for future releases.
 
 ## Quick Start
 
@@ -123,7 +130,7 @@ View project overview:
 
 ## GitHub Projects Structure
 
-All requirements are stored as GitHub issues in a project with this hierarchy:
+All requirements are stored as GitHub issues in GitHub Projects with this hierarchy:
 
 ```
 📋 Vision (Issue, Type: Vision)
@@ -154,7 +161,7 @@ All requirements are stored as GitHub issues in a project with this hierarchy:
 ### Example 1: Starting from Scratch
 
 ```
-User: "I'd like to build a web app that showcases Google Gemini failures"
+User: "I'd like to build a web app that helps users track their fitness goals"
 
 → requirements-assistant agent detects this and suggests the plugin
 → User accepts, agent runs /requirements:init
@@ -204,7 +211,7 @@ User: "I need to add another epic to my project"
 
 ## Skills
 
-The plugin includes six specialized skills that provide methodology and best practices:
+The plugin includes six specialized skills that provide methodology and best practices. Skills are **automatically activated** when Claude Code detects relevant context in your conversation:
 
 1. **vision-discovery** - How to discover and document product vision
 2. **epic-identification** - How to identify and define epics from vision
@@ -213,7 +220,7 @@ The plugin includes six specialized skills that provide methodology and best pra
 5. **prioritization** - MoSCoW prioritization framework
 6. **requirements-feedback** - Continuous feedback and iteration practices
 
-Skills are automatically activated when relevant to the current work.
+Each skill provides structured guidance, templates, and best practices to ensure high-quality requirements at every level.
 
 ## Agents
 
@@ -238,51 +245,69 @@ Validates requirements documents for:
 This plugin follows an Agile-inspired requirements methodology:
 
 ### Vision
+
 The high-level product vision answering:
 - What problem are we solving?
 - Who are we solving it for?
 - What does success look like?
 
 ### Epics
+
 Major capabilities or features that:
 - Deliver significant value
 - Are too large for a single iteration
 - Align with the vision
 
 ### User Stories
+
 Specific user-facing functionality following INVEST criteria:
 - **I**ndependent: Can be developed separately
 - **N**egotiable: Details can be discussed
 - **V**aluable: Delivers user value
 - **E**stimable: Size can be estimated
-- **S**mall: Fits in an iteration
+- **S**mall: 1-5 days of work
 - **T**estable: Can be verified
 
 Format: "As a [user], I want [goal] so that [benefit]"
 
+Each story requires 3-5 acceptance criteria that define testable completion conditions.
+
 ### Tasks
+
 Concrete implementation steps with:
 - Clear, actionable description
-- Acceptance criteria (testable conditions)
-- Effort estimate
-- Dependencies
+- 2-8 hours of work (up to 1-2 days maximum)
+- 3-5 acceptance criteria (testable conditions)
+- Dependencies identified
+- Organized by layer: frontend, backend, data, testing, documentation
 
 ## Configuration
 
-The plugin auto-detects configuration from your environment:
+The plugin requires minimal configuration and auto-detects most settings:
 
 ### GitHub Repository
-Auto-detected from `git remote` in current directory.
+
+Auto-detected from `git remote` in your current directory when running commands.
+
+**Requirements**: You must run Claude Code from within a git repository that has a GitHub remote configured.
 
 ### GitHub Authentication
-Uses GitHub CLI (`gh`) authentication. Ensure you're logged in:
+
+Uses GitHub CLI (`gh`) authentication. Verify you're logged in:
 
 ```bash
-gh auth status
+gh auth status  # Should show logged in with 'repo' and 'project' scopes
+```
+
+If not authenticated or missing scopes:
+```bash
+gh auth login              # Initial authentication
+gh auth refresh -s project # Add project scope if needed
 ```
 
 ### Project Name
-Auto-generated from repository name, or you can specify during init.
+
+Auto-generated from repository name during `/requirements:init`, or you can specify a custom name when prompted.
 
 ## Troubleshooting
 
@@ -317,17 +342,19 @@ Run `/requirements:init` to create the project, or ensure the project exists in 
 
 ### "Cannot create child issues"
 
-GitHub Projects (beta) is required for parent/child relationships. Ensure:
-1. You're using GitHub Projects (beta), not classic projects
+GitHub Projects (the new version) is required for parent/child relationships. Ensure:
+1. You're using the new GitHub Projects, not classic projects
 2. Your repository has Projects enabled
 3. You have write access to the project
+
+**Note**: Classic GitHub Projects do not support parent/child issue relationships. You must use the newer GitHub Projects (sometimes called "Projects Beta" or just "Projects").
 
 ## Best Practices
 
 1. **Start with Vision**: Always begin with `/requirements:discover-vision` to establish clear direction
 2. **One Epic at a Time**: Fully flesh out one epic before moving to the next
-3. **Keep Stories Small**: User stories should fit in 1-2 weeks of work
-4. **Clear Acceptance Criteria**: Every task needs testable acceptance criteria
+3. **Keep Stories Small**: User stories should be 1-5 days of work (INVEST criteria)
+4. **Clear Acceptance Criteria**: Every story and task needs 3-5 testable acceptance criteria
 5. **Regular Review**: Run `/requirements:review` frequently to catch issues early
 6. **Prioritize Often**: Use `/requirements:prioritize` at each phase to focus on high-value work
 7. **Iterate**: Use the feedback loops to refine requirements as you learn
@@ -337,12 +364,13 @@ GitHub Projects (beta) is required for parent/child relationships. Ensure:
 Contributions welcome! Please:
 1. Fork the repository
 2. Create a feature branch
-3. Add tests for new functionality
-4. Submit a pull request
+3. Test your changes locally with `cc --plugin-dir plugins/requirements-expert`
+4. Ensure commands, skills, and agents follow the existing patterns (see CLAUDE.md)
+5. Submit a pull request with a clear description of changes
 
 ## License
 
-MIT License - see LICENSE file for details
+[MIT License](LICENSE.txt)
 
 ## Support
 
@@ -352,6 +380,7 @@ MIT License - see LICENSE file for details
 ## Changelog
 
 ### v0.1.0 (Initial Release)
+
 - Full requirements lifecycle support
 - GitHub Projects integration
 - 8 commands for all phases
