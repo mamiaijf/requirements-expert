@@ -33,10 +33,20 @@ Initialize a GitHub Project for requirements management. This command is **idemp
 ## Project Setup
 
 4. **Get Project Name:**
-   - Use AskUserQuestion to ask: "What should we name the GitHub Project for requirements tracking?"
-   - Suggest default: "[Repository Name] Requirements"
-   - Example: "requirements-expert Requirements"
-   - Store the user's choice
+   - Use AskUserQuestion:
+     - question: "What should we name the GitHub Project for requirements tracking?"
+     - header: "Project Name"
+     - multiSelect: false
+     - options:
+       - label: "[Repository Name] Requirements"
+         description: "Standard naming convention following best practices (recommended)"
+       - label: "[Repository Name] Backlog"
+         description: "Alternative naming for backlog-style requirements tracking"
+       - label: "[Repository Name] Roadmap"
+         description: "Emphasizes long-term planning and feature roadmap view"
+   - Note: User can select "Other" to provide a custom project name
+   - Replace [Repository Name] placeholder with the repository name (the part after the "/" in `nameWithOwner` from step 3). For example, if `nameWithOwner` is "sjnims/requirements-expert", use "requirements-expert"
+   - Store the user's choice for project creation
 
 5. **Check for Existing Project (Idempotency):**
    - List existing projects: `gh project list --owner [owner] --format json`
