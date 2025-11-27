@@ -1,5 +1,3 @@
-name: Q&A
-description: Ask questions about using the requirements-expert plugin
 title: "[Question]: "
 labels: ["question"]
 body:
