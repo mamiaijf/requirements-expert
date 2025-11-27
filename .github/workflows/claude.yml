@@ -18,8 +18,10 @@ concurrency:
 jobs:
   claude:
     # Only allow repo collaborators (OWNER, MEMBER, COLLABORATOR) to trigger @claude
+    # Exclude bots to prevent Claude's own comments from triggering/canceling runs
     if: |
       github.actor != 'dependabot[bot]' &&
+      github.actor != 'claude[bot]' &&
       (
         (github.event_name == 'issue_comment' &&
          contains(github.event.comment.body, '@claude') &&
