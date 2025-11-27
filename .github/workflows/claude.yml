@@ -10,9 +10,10 @@ on:
   pull_request_review:
     types: [submitted]
 
-# Group by issue/PR number to prevent overlapping runs for same item
+# Group by issue/PR number AND actor to prevent bot comments from canceling user runs
+# Bot runs will be in separate groups and get skipped by job-level `if` conditions
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.event.issue.number || github.ref }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.event.issue.number || github.ref }}-${{ github.actor }}
   cancel-in-progress: true
 
 jobs:
