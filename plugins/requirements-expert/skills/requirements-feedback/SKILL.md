@@ -6,6 +6,27 @@ version: 0.2.0
 
 # Requirements Feedback & Continuous Documentation
 
+## When This Skill Loads
+
+First, identify which requirement level the user is working with (Vision, Epic, Story, or Task).
+
+Then determine their current need:
+
+1. **Collecting feedback** (user asks about methods, sources, techniques) - Load `references/feedback-techniques.md`
+2. **Stage-specific guidance** (user asks about feedback for a specific level) - Load `references/stage-feedback-guide.md`
+3. **Running a review** (user wants to validate or check requirements) - Load `references/feedback-checklist.md`
+4. **Incorporating feedback** (user has feedback to act on) - Follow the 7-step Quick Reference workflow below
+
+Guide users through the feedback workflow:
+
+1. Identify appropriate feedback sources for their requirement level
+2. Collect feedback using proper methods (from references)
+3. Document feedback in GitHub issue comments
+4. Update requirements based on validated learnings
+5. Communicate changes to stakeholders
+
+Adapt based on where the user is in the process.
+
 ## Overview
 
 Requirements are not static—they evolve as teams learn more about users, technology, and the market. This skill guides the practice of gathering feedback at each stage of the requirements lifecycle and using that feedback to continuously refine and improve requirements. Establishing effective feedback loops ensures requirements remain accurate, valuable, and aligned with user needs.
