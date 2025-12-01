@@ -334,7 +334,7 @@ actionlint .github/workflows/markdownlint.yml
 
 ### CI/CD Workflows
 
-The repository includes 10 GitHub Actions workflows:
+The repository includes 9 GitHub Actions workflows:
 
 **Primary CI** (runs on every PR):
 1. **markdownlint.yml** (~30-40s) - Enforces markdown style (ATX headers, dash lists, 2-space indentation)
@@ -347,14 +347,13 @@ The repository includes 10 GitHub Actions workflows:
 **Automation Workflows**:
 5. **labeler.yml** - Auto-labels PRs based on changed files
 6. **sync-labels.yml** - Syncs labels from labels.yml to repository
-7. **release-drafter.yml** - Auto-generates release notes from merged PRs
 
 **Dependency Management Workflows**:
-8. **dependabot-auto-merge.yml** - Auto-merges non-breaking Dependabot PRs
+7. **dependabot-auto-merge.yml** - Auto-merges non-breaking Dependabot PRs
 
 **Utility Workflows**:
-9. **greet.yml** - Welcomes first-time contributors
-10. **stale.yml** - Marks inactive issues/PRs as stale
+8. **greet.yml** - Welcomes first-time contributors
+9. **stale.yml** - Marks inactive issues/PRs as stale
 
 **If markdownlint fails**:
 ```bash
@@ -717,10 +716,10 @@ grep -r "0\.x\.0" plugins/requirements-expert --include="*.json" --include="SKIL
 
 #### 3. Update Documentation
 
-- `CHANGELOG.md` - Copy and clean up notes from Release Drafter draft release:
-  1. View draft: `gh release view <draft-tag>` or check GitHub Releases page
-  2. Deduplicate entries (Release Drafter may categorize same PR multiple times)
-  3. Organize into Keep a Changelog sections (Added, Changed, Fixed, Security, Performance, Documentation)
+- `CHANGELOG.md` - Add release notes following Keep a Changelog format:
+  1. Review commits since last release: `git log v0.x.x..HEAD --oneline`
+  2. Organize into sections: Added, Changed, Fixed, Security, Performance, Documentation
+  3. Group related changes and reference PR numbers
   4. Add version comparison links at bottom of file
 - `README.md` - Update version references if applicable
 - Any other relevant documentation
@@ -759,7 +758,7 @@ gh pr create --title "Release v0.x.x" \
 ## Checklist
 - [x] Version updated in manifests (plugin.json, marketplace.json)
 - [x] Version updated in all skill SKILL.md files
-- [x] CHANGELOG.md updated (from Release Drafter notes)
+- [x] CHANGELOG.md updated
 - [x] README.md updated (if applicable)
 - [x] Plugin tested locally
 "
@@ -786,27 +785,22 @@ git push origin v0.x.x
 
 #### 7. Create GitHub Release
 
-Release Drafter automatically maintains a draft release with notes generated from merged PRs. To publish:
-
-1. Navigate to the repository's **Releases** page in GitHub
-2. Find the draft release created by Release Drafter
-3. Review the auto-generated release notes
-4. Verify the version matches your tag (v0.x.x)
-5. Click "Publish release"
-
-**Alternative** (if Release Drafter draft doesn't exist):
-
 ```bash
-# Create GitHub Release with auto-generated notes
-gh release create v0.x.x --generate-notes
+# Create GitHub Release with notes from CHANGELOG
+gh release create v0.x.x --title "v0.x.x" --notes-file - <<'EOF'
+## Summary
 
-# Or manually specify release notes
-gh release create v0.x.x --title "v0.x.x" --notes "Release notes here"
+Brief description of the release focus.
+
+## What's Changed
+
+[Copy relevant sections from CHANGELOG.md]
+
+**Full Changelog**: https://github.com/sjnims/requirements-expert/compare/v0.x-1.x...v0.x.x
+EOF
 ```
 
 **Note**: Main branch is protected and requires PRs. All version bumps must go through the release branch workflow.
-
-**Tip**: Release Drafter categorizes PRs by label. Ensure PRs have appropriate labels (`enhancement`, `bug`, `documentation`, `breaking`, etc.) before merging for accurate release notes.
 
 **Publishing**: The entire repository acts as a marketplace. The `plugins/requirements-expert/` directory is the distributable plugin unit.
 
