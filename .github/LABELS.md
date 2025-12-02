@@ -6,7 +6,8 @@ This directory contains the canonical label configuration for the repository.
 
 - **labels.yml**: Source of truth for all repository labels
 - **sync-labels.sh**: Script for manual label syncing (helper/documentation)
-- **workflows/sync-labels.yml**: Automated workflow that syncs labels on push to main
+- **workflows/sync-labels.yml**: Automated workflow that syncs label definitions on push to main
+- **workflows/semantic-labeler.yml**: Claude-powered workflow that applies labels to issues and PRs
 
 ## Label Categories
 
@@ -61,6 +62,48 @@ Time estimates:
 Labels for GitHub Discussions categories:
 - `idea` - Feature idea or suggestion
 - `showcase` - Community showcase
+
+## Automatic Label Application
+
+Labels are automatically applied to issues and PRs using Claude-powered semantic analysis.
+
+### How It Works
+
+The `semantic-labeler.yml` workflow:
+
+- **Triggers on**: Issues (opened, edited) and PRs (opened, synchronize, edited)
+- **Analyzes**: Title, body, and for PRs, the diff
+- **Applies**: Type, component, priority, effort, and impact labels
+
+### Labels Applied Automatically
+
+| Category | Labels | Required |
+|----------|--------|----------|
+| Type | bug, enhancement, documentation, question, refactor, chore | Yes (one) |
+| Component | component:\*, github-actions, dependencies | If applicable |
+| Priority | priority:critical/high/medium/low | Yes (one) |
+| Effort | effort:small/medium/large | Yes (one) |
+| Impact | breaking, security | If applicable |
+| Community | good first issue, help wanted | If applicable |
+
+### Differences from Previous Labeler
+
+The semantic labeler replaces the old `actions/labeler` which only applied labels based on file paths:
+
+| Aspect | Old (path-based) | New (semantic) |
+|--------|------------------|----------------|
+| Issues | Not supported | Full support |
+| Content understanding | File paths only | Semantic analysis |
+| Priority/effort | Manual only | Automatic |
+| Speed | ~5 seconds | ~30-60 seconds |
+
+### Skipped Cases
+
+The workflow skips:
+
+- Bot-created issues/PRs (dependabot, claude)
+- Draft PRs
+- Fork PRs (for security - secrets not exposed)
 
 ## Managing Labels
 
