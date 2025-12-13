@@ -31,10 +31,12 @@ body:
     attributes:
       label: Which component would this affect?
       options:
-        - Command
-        - Skill
-        - Agent
-        - Hook
+        - Command (/re:*)
+        - Skill (methodology guidance)
+        - Agent (requirements-assistant)
+        - Hook (prompt detection)
+        - GitHub Projects integration
+        - GitHub CLI integration
         - Documentation
         - Other
     validations:
@@ -57,16 +59,24 @@ body:
     id: context
     attributes:
       label: Additional Context
-      description: Add any other context, screenshots, or examples about the feature request
+      description: Add any other context, screenshots, or relevant information
 
   - type: dropdown
     id: priority
     attributes:
       label: How important is this feature to you?
       options:
-        - Critical - Blocking my work
+        - Critical - Fundamental capability gap
         - High - Would significantly improve my workflow
         - Medium - Would be nice to have
         - Low - Just a suggestion
     validations:
       required: true
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution
+      description: Let us know if you'd like to help implement this feature
+      options:
+        - label: I'm willing to help implement this feature

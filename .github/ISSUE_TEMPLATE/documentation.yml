@@ -15,11 +15,15 @@ body:
       options:
         - README.md
         - CLAUDE.md
+        - CHANGELOG.md
+        - TESTING.md
         - Command documentation
         - Skill documentation
         - Agent documentation
+        - Hook documentation
         - Code of Conduct
         - Contributing guidelines
+        - LICENSE
         - Other
     validations:
       required: true
@@ -55,7 +59,9 @@ body:
         - label: Incorrect information
         - label: Missing information
         - label: Unclear explanation
+        - label: Code example needed
         - label: Broken link
+        - label: Missing link (should link somewhere but doesn't)
         - label: Typo or grammar
         - label: Outdated content
         - label: Other
@@ -64,4 +70,4 @@ body:
     id: context
     attributes:
       label: Additional Context
-      description: Any other context or screenshots
+      description: Add any other context, screenshots, or relevant information

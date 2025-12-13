@@ -8,6 +8,9 @@ body:
       value: |
         Have a question about using the plugin? We're here to help!
 
+        **Consider using [GitHub Discussions](https://github.com/sjnims/requirements-expert/discussions) instead!**
+        Questions often get faster community responses there, and help others with similar questions find answers.
+
         **Before asking**: Please check the [README](https://github.com/sjnims/requirements-expert/blob/main/README.md) and [CLAUDE.md](https://github.com/sjnims/requirements-expert/blob/main/CLAUDE.md) first.
 
   - type: textarea
@@ -27,6 +30,10 @@ body:
         - Installation and setup
         - Using commands
         - Understanding the workflow
+        - Vision discovery
+        - Epic identification
+        - User story creation
+        - Task breakdown
         - GitHub CLI integration
         - GitHub Projects setup
         - MoSCoW prioritization
@@ -48,7 +55,7 @@ body:
     id: context
     attributes:
       label: Additional Context
-      description: Any other information that might help us answer your question
+      description: Add any other context, screenshots, or relevant information
       placeholder: "I'm trying to... My use case is..."
 
   - type: checkboxes
@@ -58,7 +65,9 @@ body:
       options:
         - label: I've checked the README.md
           required: true
-        - label: I've searched existing issues
+        - label: I've searched existing issues and discussions
+          required: true
+        - label: I've considered posting in GitHub Discussions instead
           required: true
         - label: This is a question, not a bug report or feature request
           required: true
