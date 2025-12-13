@@ -58,3 +58,24 @@ body:
       placeholder: I'm trying to...
     validations:
       required: false
+
+  - type: input
+    id: claude-code-version
+    attributes:
+      label: Claude Code Version (for troubleshooting)
+      description: "Run `claude --version` to find this"
+      placeholder: "e.g., 1.0.17"
+    validations:
+      required: false
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating System
+      options:
+        - macOS
+        - Windows
+        - Linux
+        - Other
+    validations:
+      required: false

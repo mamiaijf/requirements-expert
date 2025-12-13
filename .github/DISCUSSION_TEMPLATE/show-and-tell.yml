@@ -6,6 +6,21 @@ body:
       value: |
         Share how you're using requirements-expert! We'd love to hear about your projects and learnings.
 
+  - type: dropdown
+    id: component-type
+    attributes:
+      label: What are you showcasing?
+      options:
+        - Complete requirements workflow
+        - Vision document
+        - Epic breakdown
+        - User stories
+        - Task decomposition
+        - Prioritization approach
+        - Other
+    validations:
+      required: true
+
   - type: textarea
     id: showcase
     attributes:
@@ -34,3 +49,11 @@ body:
       placeholder: "GitHub repo: ... Blog post: ..."
     validations:
       required: false
+
+  - type: checkboxes
+    id: consent
+    attributes:
+      label: Sharing preferences
+      options:
+        - label: I'm okay with this being featured in project documentation
+          required: false
