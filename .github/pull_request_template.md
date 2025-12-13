@@ -11,6 +11,7 @@
 - [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
 - [ ] Documentation update (improvements to README, CLAUDE.md, or component docs)
 - [ ] Refactoring (code change that neither fixes a bug nor adds a feature)
+- [ ] Test (adding or updating tests)
 - [ ] Configuration change (changes to .markdownlint.json, plugin.json, etc.)
 
 ## Component(s) Affected
@@ -29,7 +30,11 @@
 ## Motivation and Context
 
 <!-- Why is this change required? What problem does it solve? -->
-<!-- If it fixes an open issue, please link to the issue here -->
+<!-- If it fixes an open issue, please link to the issue here using one of these formats: -->
+<!-- Fixes #123 - closes issue when PR merges -->
+<!-- Closes #123 - same as Fixes -->
+<!-- Resolves #123 - same as Fixes -->
+<!-- Related to #123 - links without closing -->
 
 Fixes # (issue)
 
@@ -38,13 +43,15 @@ Fixes # (issue)
 <!-- Describe the tests you ran to verify your changes -->
 
 **Test Configuration**:
+
 - Claude Code version:
 - GitHub CLI version: `gh --version`
 - OS:
-- Testing repository: <!-- public repo you tested with, if applicable -->
+- Testing repository: <!-- use a test repo, not production -->
 
 **Test Steps**:
-1. <!-- e.g., Load plugin with `cc --plugin-dir plugins/requirements-expert` -->
+
+1. <!-- e.g., Load plugin with `claude --plugin-dir plugins/requirements-expert` -->
 2. <!-- e.g., Run command `/re:init` -->
 3. <!-- e.g., Verify project created successfully -->
 4. <!-- etc. -->
@@ -72,39 +79,75 @@ Fixes # (issue)
 
 ### Component-Specific Checks
 
-<!-- Only relevant if you modified commands, skills, or agents -->
+<!-- Only relevant if you modified commands, skills, agents, or hooks -->
 
-#### Commands (if applicable)
+<details>
+<summary><strong>Commands</strong> (click to expand)</summary>
 
 - [ ] Command uses imperative form ("Do X", not "You should do X")
 - [ ] Error handling is included for common failure modes
 - [ ] GitHub CLI commands are properly formatted
 - [ ] Success/failure messages are clear and helpful
 
-#### Skills (if applicable)
+</details>
+
+<details>
+<summary><strong>Skills</strong> (click to expand)</summary>
 
 - [ ] Description uses third-person with specific trigger phrases
-- [ ] SKILL.md is under 2,000 words (progressive disclosure)
+- [ ] SKILL.md is 1,500-2,000 words (progressive disclosure)
 - [ ] Detailed content is in `references/` subdirectory
 - [ ] Templates follow the established format
 
-#### Agents (if applicable)
+</details>
+
+<details>
+<summary><strong>Agents</strong> (click to expand)</summary>
 
 - [ ] Agent includes 3-4 `<example>` blocks
 - [ ] Examples demonstrate triggering conditions clearly
 - [ ] System prompt is clear and focused
 - [ ] Tool list is minimal and appropriate
+- [ ] YAML frontmatter includes required fields (name, description, model, color)
+- [ ] Optional frontmatter configured correctly (tools, allowed-tools)
+
+</details>
+
+<details>
+<summary><strong>Hooks</strong> (click to expand)</summary>
+
+- [ ] Hook uses correct event type (UserPromptSubmit, PreToolUse, PostToolUse, etc.)
+- [ ] Hook matchers are properly configured (if applicable)
+- [ ] Hook type is appropriate (prompt for LLM-driven, command for scripts)
+- [ ] Prompt-based hooks have clear, focused instructions
+
+</details>
+
+<details>
+<summary><strong>Requirements Methodology</strong> (click to expand)</summary>
+
+- [ ] User story templates follow INVEST criteria
+- [ ] Priority handling uses MoSCoW values (must-have, should-have, could-have, wont-have)
+- [ ] Both custom fields and labels are correctly configured (if modifying requirements handling)
+- [ ] Parent/child hierarchy is maintained correctly
+
+</details>
 
 ### Testing
 
-- [ ] I have tested the plugin locally with `cc --plugin-dir plugins/requirements-expert`
+- [ ] I have tested the plugin locally with `claude --plugin-dir plugins/requirements-expert`
 - [ ] I have tested the full workflow (if applicable)
-- [ ] I have verified GitHub CLI integration works (if applicable)
+- [ ] I have verified GitHub CLI integration works
+- [ ] I have verified GitHub Projects operations work correctly (if applicable)
 - [ ] I have tested in a clean repository (not my development repo)
+- [ ] I have used plugin-dev agents for validation (if available)
 
 ### Version Management (if applicable)
 
-- [ ] I have updated version numbers in both `plugin.json` and `marketplace.json` (if this is a release)
+- [ ] I have updated version numbers in all version files:
+  - [ ] `plugins/requirements-expert/.claude-plugin/plugin.json` (source of truth)
+  - [ ] `.claude-plugin/marketplace.json` (metadata.version AND plugins[0].version)
+  - [ ] `CLAUDE.md` (Quick Reference section)
 - [ ] I have updated CHANGELOG.md with relevant changes
 
 ## Screenshots (if applicable)
@@ -134,4 +177,6 @@ Fixes # (issue)
 - [ ] Changes align with project architecture and design patterns
 - [ ] No security vulnerabilities introduced
 - [ ] Breaking changes are clearly documented
-- [ ] Version numbers are updated (if applicable)
+- [ ] Labels are appropriate for the change type
+- [ ] Version numbers are updated in all version files (if applicable)
+- [ ] CHANGELOG.md is updated (if applicable)

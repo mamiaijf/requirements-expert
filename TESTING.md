@@ -8,7 +8,7 @@ This file provides comprehensive testing strategies for contributors creating or
 
 ```bash
 # Load plugin locally (from repository root)
-cc --plugin-dir plugins/requirements-expert
+claude --plugin-dir plugins/requirements-expert
 
 # Test a specific command
 /re:init
@@ -44,7 +44,7 @@ Run these commands in sequence to test the complete workflow:
 
 ### 1. Happy Path Testing
 
-- [ ] Load plugin: `cc --plugin-dir plugins/requirements-expert`
+- [ ] Load plugin: `claude --plugin-dir plugins/requirements-expert`
 - [ ] Navigate to a test git repository with GitHub remote
 - [ ] Run `/re:init`
 - [ ] Verify project created with user-selected name

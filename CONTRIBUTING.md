@@ -87,7 +87,7 @@ git checkout -b fix/issue-description
 
 ```bash
 # From repository root
-cc --plugin-dir plugins/requirements-expert
+claude --plugin-dir plugins/requirements-expert
 
 # Test commands in Claude Code
 /re:init
@@ -152,7 +152,7 @@ markdownlint '**/*.md' --ignore node_modules --fix
 - Use 2-space indentation for lists
 - Use fenced code blocks (not indented)
 - No line length limits
-- Allowed HTML: `<p>`, `<img>`, `<example>`, `<commentary>`
+- Allowed HTML: `<p>`, `<img>`, `<example>`, `<commentary>`, `<details>`, `<summary>`, `<strong>`
 
 ## Component-Specific Guidelines
 
@@ -240,7 +240,7 @@ When modifying hooks:
 
 ### Local Testing Checklist
 
-- [ ] Load plugin: `cc --plugin-dir plugins/requirements-expert`
+- [ ] Load plugin: `claude --plugin-dir plugins/requirements-expert`
 - [ ] Test affected commands
 - [ ] Verify GitHub CLI integration works
 - [ ] Test in a clean repository (not your development repo)
@@ -274,7 +274,7 @@ gh repo create test-requirements-repo --public --source=. --remote=origin
 git push -u origin main
 
 # Now test the plugin
-cc --plugin-dir /path/to/requirements-expert/plugins/requirements-expert
+claude --plugin-dir /path/to/requirements-expert/plugins/requirements-expert
 ```
 
 ## Submitting Changes

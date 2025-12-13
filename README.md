@@ -50,7 +50,7 @@ git clone https://github.com/sjnims/requirements-expert.git
 cd requirements-expert
 
 # Load the plugin (note: plugin root is in plugins/ subdirectory)
-cc --plugin-dir plugins/requirements-expert
+claude --plugin-dir plugins/requirements-expert
 ```
 
 ### From Marketplace
@@ -420,7 +420,7 @@ GitHub Projects (the new version) is required for parent/child relationships. En
 Contributions welcome! Please:
 1. Fork the repository
 2. Create a feature branch
-3. Test your changes locally with `cc --plugin-dir plugins/requirements-expert`
+3. Test your changes locally with `claude --plugin-dir plugins/requirements-expert`
 4. Ensure commands, skills, and agents follow the existing patterns (see CLAUDE.md)
 5. Submit a pull request with a clear description of changes
 

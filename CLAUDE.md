@@ -16,7 +16,7 @@ The requirements-expert plugin is a **Claude Code plugin** that guides users thr
 
 **Test Locally**:
 ```bash
-cc --plugin-dir plugins/requirements-expert
+claude --plugin-dir plugins/requirements-expert
 /re:init  # Test a command
 ```
 
@@ -255,7 +255,7 @@ The `${CLAUDE_PLUGIN_ROOT}` variable only works in JSON configuration files (hoo
 4. Use imperative form: "Do X", not "You should do X"
 5. Include error handling for common failure modes
 6. Follow markdown style guide (ATX headers, dash lists, fenced code blocks)
-7. Test with: `cc --plugin-dir plugins/requirements-expert` then `/re:new-command`
+7. Test with: `claude --plugin-dir plugins/requirements-expert` then `/re:new-command`
 8. Lint before committing: `markdownlint plugins/requirements-expert/commands/new-command.md`
 
 ### Adding a New Skill
@@ -332,7 +332,7 @@ markdownlint '**/*.md' --ignore node_modules --fix
 - No line length limits (MD013 disabled)
 - Fenced code blocks (not indented)
 - Underscores for emphasis (`_italic_`), asterisks for bold (`**bold**`)
-- Allow HTML elements: `<p>`, `<img>`, `<example>`, `<commentary>`
+- Allow HTML elements: `<p>`, `<img>`, `<example>`, `<commentary>`, `<details>`, `<summary>`, `<strong>`
 
 **VS Code integration**: Markdown validation is enabled (see `.vscode/settings.json`)
 
@@ -340,7 +340,7 @@ markdownlint '**/*.md' --ignore node_modules --fix
 
 ```bash
 # Load plugin locally (from repository root)
-cc --plugin-dir plugins/requirements-expert
+claude --plugin-dir plugins/requirements-expert
 
 # Test specific command
 /re:init
@@ -404,7 +404,7 @@ markdownlint '**/*.md' --ignore node_modules --fix  # Auto-fix issues
 **Quick test**:
 
 ```bash
-cc --plugin-dir plugins/requirements-expert
+claude --plugin-dir plugins/requirements-expert
 /re:init  # Test a command
 ```
 
@@ -638,7 +638,7 @@ rg '"version"' plugins/requirements-expert/.claude-plugin/plugin.json .claude-pl
 rg 'Current Version.*v[0-9]' CLAUDE.md
 
 # Load plugin locally and test
-cc --plugin-dir plugins/requirements-expert
+claude --plugin-dir plugins/requirements-expert
 
 # Run through full lifecycle test:
 # /re:init → /re:discover-vision → /re:identify-epics →
@@ -709,7 +709,7 @@ When developing new features for this plugin:
 1. **Design First**: Determine which layer (command/skill/agent)
 2. **Check Patterns**: Follow existing patterns in similar components
 3. **Progressive Build**: Start with minimal version, expand incrementally
-4. **Test Locally**: Use `cc --plugin-dir plugins/requirements-expert` for each change
+4. **Test Locally**: Use `claude --plugin-dir plugins/requirements-expert` for each change
 5. **Validate**: Use plugin-validator agent if available
 6. **Document**: Update README if user-facing, update this file if architectural
 
@@ -821,7 +821,7 @@ The CI will fail if markdown doesn't comply:
 - ✅ Fenced code blocks, not indented blocks
 - ✅ No line length limits (MD013 disabled)
 
-**Allowed HTML tags**: `<p>`, `<img>`, `<example>`, `<commentary>`
+**Allowed HTML tags**: `<p>`, `<img>`, `<example>`, `<commentary>`, `<details>`, `<summary>`, `<strong>`
 
 ### State-First Validation Pattern
 
