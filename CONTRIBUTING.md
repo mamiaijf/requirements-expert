@@ -25,7 +25,7 @@ This project adheres to the [Contributor Covenant Code of Conduct](CODE_OF_CONDU
 
 Before contributing, ensure you have:
 
-- **Claude Code**: Install from [claude.ai/code](https://claude.ai/code)
+- **Claude Code**: Install from [claude.com/product/claude-code](https://claude.com/product/claude-code)
 - **GitHub CLI** (`gh`): Installed and authenticated
   ```bash
   brew install gh  # macOS
@@ -362,6 +362,19 @@ See [pull_request_template.md](.github/pull_request_template.md) for the complet
 - Blank line
 - Detailed description (wrap at 72 chars)
 - Reference issues: `Fixes #123`, `Closes #456`
+
+## For Maintainers
+
+### Release Process
+
+If you're a maintainer preparing a release, follow the detailed **Version Release Procedure** in [CLAUDE.md](CLAUDE.md#publishing--version-management). Key steps include:
+
+1. Create a release branch (`release/v0.x.x`)
+2. Update version in all version files (plugin.json, marketplace.json, CLAUDE.md)
+3. Update CHANGELOG.md with release notes
+4. Test locally and run markdownlint
+5. Create PR and merge after approval
+6. Create GitHub Release with `gh release create`
 
 ## Community
 

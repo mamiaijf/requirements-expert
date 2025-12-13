@@ -72,6 +72,28 @@ When a security vulnerability is confirmed:
 4. **Markdown Linting**: Run `markdownlint` before committing to catch potential issues
 5. **Test Locally**: Always test with `claude --plugin-dir plugins/requirements-expert` before pushing
 
+### Claude Code Plugin Security Considerations
+
+This plugin has specific security measures unique to Claude Code plugins:
+
+1. **Restricted Tool Access**: Commands use `Bash(gh:*)` pattern to limit shell access to GitHub CLI only, following the principle of least privilege
+
+2. **No Credential Storage**: The plugin never stores credentials - all authentication is handled by GitHub CLI (`gh auth`)
+
+3. **No Local State**: No sensitive data is cached locally; GitHub Projects is the single source of truth
+
+4. **Hook Safety**: The `UserPromptSubmit` hook only performs pattern matching on user input and does not execute arbitrary code
+
+5. **Agent Tool Limitations**: The `requirements-assistant` agent requires unrestricted `Bash` (Claude Code platform limitation), but only executes `gh` CLI commands in practice
+
+6. **Input Validation**: All user-provided values (project names, issue titles) are passed through GitHub CLI, which handles escaping
+
+**When reviewing contributions**, verify:
+- Commands use `Bash(gh:*)` restriction, not unrestricted `Bash`
+- No hardcoded secrets or credentials
+- No local file writes for sensitive data
+- Hook patterns don't enable code injection
+
 ## Scope
 
 This security policy applies to:
@@ -125,4 +147,4 @@ _No security issues have been reported yet._
 
 ---
 
-**Note:** _This security policy was last updated: December 7, 2025_
+**Note:** _This security policy was last updated: December 13, 2025_

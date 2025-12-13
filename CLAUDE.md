@@ -1,6 +1,25 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Claude Code ([claude.com/product/claude-code](https://claude.com/product/claude-code)) when working with code in this repository.
+
+## Table of Contents
+
+- [Plugin Overview](#plugin-overview)
+- [Quick Reference](#quick-reference)
+- [Architecture](#architecture)
+- [Key Design Patterns](#key-design-patterns)
+- [Working with Components](#working-with-components)
+- [Development Commands](#development-commands)
+- [GitHub CLI Integration](#github-cli-integration)
+- [Hook Behavior](#hook-behavior)
+- [Methodology](#methodology)
+- [Component File Structure](#component-file-structure)
+- [File Organization Best Practices](#file-organization-best-practices)
+- [Common Pitfalls to Avoid](#common-pitfalls-to-avoid)
+- [Publishing & Version Management](#publishing--version-management)
+- [Plugin Development Workflow](#plugin-development-workflow)
+- [Dependencies & Requirements](#dependencies--requirements)
+- [Critical PR Review Patterns](#critical-pr-review-patterns)
 
 ## Plugin Overview
 
@@ -55,6 +74,8 @@ This repository uses a **marketplace-at-root** structure where the repository ac
 /                                    # Repository root (marketplace)
 ├── .claude-plugin/
 │   └── marketplace.json             # Marketplace manifest
+├── assets/
+│   └── banner-flow-diagram.svg      # README banner image
 ├── plugins/
 │   └── requirements-expert/         # PLUGIN ROOT (publishable unit)
 │       ├── .claude-plugin/
@@ -716,7 +737,7 @@ When developing new features for this plugin:
 ## Dependencies & Requirements
 
 **Required**:
-- Claude Code (claude.ai/code)
+- Claude Code ([claude.com/product/claude-code](https://claude.com/product/claude-code))
 - GitHub CLI (`gh`) v2.0+
 - Git repository with GitHub remote
 - GitHub Projects enabled on repository

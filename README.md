@@ -30,7 +30,7 @@ Everything is managed in GitHub Projects with full parent/child hierarchy, makin
 
 ## Prerequisites
 
-- **Claude Code**: Install from [claude.ai/code](https://claude.ai/code)
+- **Claude Code**: Install from [claude.com/product/claude-code](https://claude.com/product/claude-code)
 - **GitHub CLI** (`gh`): Installed and authenticated (`gh auth login`)
 - **Git repository**: A GitHub repository where you want to track requirements
 - **GitHub permissions**: `repo` and `project` scopes (read/write)
@@ -38,6 +38,11 @@ Everything is managed in GitHub Projects with full parent/child hierarchy, makin
 Verify setup:
 ```bash
 gh auth status  # Should show ✓ Logged in and list scopes
+```
+
+If `project` scope is missing, add it:
+```bash
+gh auth refresh -s project
 ```
 
 ## Installation
@@ -403,6 +408,28 @@ GitHub Projects is required for parent/child relationships. Ensure:
 
 **Note**: Classic GitHub Projects do not support parent/child issue relationships. You must use GitHub Projects (not classic projects).
 
+### "Label not found" or issues created without labels
+
+The plugin uses labels like `type:vision`, `type:epic`, `priority:must-have`, etc. If labels don't exist in your repository, issues will be created without them.
+
+**To create required labels manually:**
+
+```bash
+# Type labels
+gh label create "type:vision" --color "0E8A16" --description "Vision requirement"
+gh label create "type:epic" --color "1D76DB" --description "Epic requirement"
+gh label create "type:story" --color "5319E7" --description "User story"
+gh label create "type:task" --color "FBCA04" --description "Task"
+
+# Priority labels (MoSCoW)
+gh label create "priority:must-have" --color "B60205" --description "Must Have - Critical"
+gh label create "priority:should-have" --color "D93F0B" --description "Should Have - Important"
+gh label create "priority:could-have" --color "FBCA04" --description "Could Have - Nice to have"
+gh label create "priority:wont-have" --color "C2E0C6" --description "Won't Have - Out of scope"
+```
+
+**Note**: The `/re:init` command will prompt you to create these labels if they don't exist.
+
 ## Best Practices
 
 1. **Start with Vision**: Always begin with `/re:discover-vision` to establish clear direction
@@ -428,7 +455,7 @@ This project wouldn't exist without the incredible work of others:
 
 - **[Claude](https://claude.ai)** - The AI assistant that helped design, build, and refine every aspect of this plugin. From architecture decisions to documentation, Claude was a true collaborator throughout.
 
-- **[Anthropic](https://anthropic.com)** - For creating Claude and [Claude Code](https://claude.ai/code), the powerful AI coding assistant that makes plugins like this possible.
+- **[Anthropic](https://anthropic.com)** - For creating Claude and [Claude Code](https://claude.com/product/claude-code), the powerful AI coding assistant that makes plugins like this possible.
 
 - **[GitHub](https://github.com)** - For GitHub Projects (the backbone of this plugin's data architecture), GitHub CLI, and GitHub Actions that power our CI/CD.
 
