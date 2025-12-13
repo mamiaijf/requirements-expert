@@ -7,15 +7,18 @@ updates:
       day: "monday"
       time: "09:00"
       timezone: "America/New_York"
+    assignees:
+      - "sjnims"
     labels:
       - "dependencies"
       - "github-actions"
+      - "chore"
     commit-message:
       prefix: "chore"
       include: "scope"
-    # Group minor/patch updates together
+    # Group minor/patch updates together (major updates create individual PRs)
     groups:
-      actions-minor:
+      actions-non-major:
         patterns:
           - "*"
         update-types:
